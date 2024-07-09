@@ -8,21 +8,28 @@
 </head>
 <body>
     <div id="game">
-        <h1>Braising Eggs</h1>
+        <!-- <h1>Braising Eggs</h1> -->
         <div id="step-container">
             <div id="egg-cracking" class="step">
                 <img src="images/egg.png" alt="Egg" id="egg">
                 <div id="trash-can" class="hidden">
-                    <img src="images/trash.png" class="hidden" alt="Trash Can" id="trash-can-img">
+                    <img src="images/trash.png" alt="Trash Can" id="trash-can-img">
                 </div>
-                <div id="pot" class="hidden">
+                <div id="pot" class="hidden"> <!-- Hidden initially -->
                     <img src="images/pot.png" alt="Pot" id="pot-img">
+                </div>
+                <div id="fire-pot" class="hidden">
+                    <img src="images/fire-pot.png" alt="Fire Pot" id="fire-pot-img">
+                </div>
+                <div id="fire-extinguisher" class="hidden">
+                    <img src="images/fire-extinguisher.png" alt="Fire Extinguisher" id="fire-extinguisher-img">
                 </div>
             </div>
         </div>
         <div id="tutorial-panel">
             <p id="tutorial-text">Let's braise some eggs and turn them into egg jam! Get started by cracking that egg.</p>
         </div>
+        <audio id="crack-sound" src="sounds/crack.wav"></audio>
     </div>
     <script src="script.js"></script>
 </body>

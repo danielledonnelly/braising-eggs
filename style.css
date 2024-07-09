@@ -1,4 +1,6 @@
 body {
+  background-image: url('images/background.png');
+  fit: cover;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -20,8 +22,11 @@ body {
 #egg {
   width: 200px;
   cursor: pointer;
-  display: block;
-  margin: 0 auto;
+  position: fixed;
+  top: 20%; 
+  left: 50%;
+  transform: translateX(-50%); 
+  z-index: 1;
 }
 
 #trash-can {
@@ -29,20 +34,41 @@ body {
 }
 
 #trash-can-img {
-  width: 200px;
-  height: 200px;
+  width: 300px;
+  height: 300px;
   cursor: pointer;
   display: block;
   margin: 0 auto;
 }
 
-#pot {
+#pot, #fire-pot {
   margin-top: 20px;
+  position: fixed; 
+  top: 55%;
+  left: 50%; 
+  transform: translate(-50%, -50%);
+  z-index: 0; 
 }
 
-#pot-img {
-  width: 200px; 
-  height: 200px; 
+#pot-img, #fire-pot-img {
+  width: 300px;
+  height: 300px;
+  cursor: pointer;
+  display: block;
+  margin: 0 auto;
+}
+
+#fire-extinguisher {
+  position: fixed; /* Change to fixed positioning */
+  top: 30%; /* Position higher on the screen */
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+
+#fire-extinguisher-img {
+  width: 100px;
+  height: 100px; 
   cursor: pointer;
   display: block;
   margin: 0 auto;
