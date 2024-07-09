@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
           egg.draggable = false;
       }
       if (crackStage === crackImages.length - 1) {
-          tutorialText.textContent = "Now, throw your broken egg in the trash.";
+          tutorialText.textContent = "Throw your broken egg in the trash.";
           egg.draggable = true;
           trashCan.classList.remove("hidden");
       }

@@ -1,4 +1,3 @@
-/* styles.css */
 body {
   display: flex;
   justify-content: center;
@@ -6,7 +5,7 @@ body {
   height: 100vh;
   margin: 0;
   font-family: Arial, sans-serif;
-  background-color: #000; /* Pure black background */
+  background-color: #000;
 }
 
 #game {
@@ -27,14 +26,14 @@ body {
 }
 
 #trash-can-img {
-  width: 200px; /* Adjusted width */
-  height: 200px; /* Adjusted height */
+  width: 200px; 
+  height: 200px; 
+  cursor: pointer;
 }
 
 #pot {
   width: 200px;
   height: 200px;
-  border: 2px solid #fff;
   margin: 20px auto;
 }
 
@@ -43,13 +42,13 @@ body {
 }
 
 #tutorial-panel {
-  background-color: #333; /* Dark background */
-  border: 2px solid #444; /* Slightly lighter border */
+  background-color: #121111;
+  border: 2px solid #fff200; 
   padding: 10px;
   margin-top: 20px;
 }
 
 #tutorial-text {
   font-size: 18px;
-  color: #fff; /* Light text color */
+  color: #fff; 
 }
