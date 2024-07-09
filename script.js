@@ -50,7 +50,6 @@ document.addEventListener("DOMContentLoaded", function () {
       const egg = document.getElementById(eggId);
       egg.style.display = "none";
       tutorialText.textContent = "Great! Now let's proceed to braising the egg properly.";
-      // Proceed to the next step (e.g., showing the braising step)
       // nextStep();
   }
 });
