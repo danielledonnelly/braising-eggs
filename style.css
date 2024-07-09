@@ -1,3 +1,4 @@
+/* styles.css */
 body {
   display: flex;
   justify-content: center;
@@ -5,7 +6,7 @@ body {
   height: 100vh;
   margin: 0;
   font-family: Arial, sans-serif;
-  background-color: #000;
+  background-color: #000; /* Pure black background */
 }
 
 #game {
@@ -26,8 +27,15 @@ body {
 }
 
 #trash-can-img {
-  width: 300px; 
-  height: 300px;
+  width: 200px; /* Adjusted width */
+  height: 200px; /* Adjusted height */
+}
+
+#pot {
+  width: 200px;
+  height: 200px;
+  border: 2px solid #fff;
+  margin: 20px auto;
 }
 
 .hidden {
@@ -35,13 +43,13 @@ body {
 }
 
 #tutorial-panel {
-  background-color: #333;
-  border: 2px solid #444;
+  background-color: #333; /* Dark background */
+  border: 2px solid #444; /* Slightly lighter border */
   padding: 10px;
   margin-top: 20px;
 }
 
 #tutorial-text {
   font-size: 18px;
-  color: #fff; 
+  color: #fff; /* Light text color */
 }

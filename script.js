@@ -3,7 +3,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const egg = document.getElementById("egg");
   const trashCan = document.getElementById("trash-can");
   const tutorialText = document.getElementById("tutorial-text");
-  
+  const pot = document.getElementById("pot");
+
   let crackStage = 0;
   const crackImages = [
       'images/egg.png',
@@ -35,6 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
   egg.addEventListener("dragstart", dragStart);
   trashCan.addEventListener("dragover", dragOver);
   trashCan.addEventListener("drop", drop);
+  trashCan.addEventListener("click", resetGame);
 
   function dragStart(event) {
       event.dataTransfer.setData("text/plain", event.target.id);
@@ -49,7 +51,18 @@ document.addEventListener("DOMContentLoaded", function () {
       const eggId = event.dataTransfer.getData("text/plain");
       const egg = document.getElementById(eggId);
       egg.style.display = "none";
-      tutorialText.textContent = "Great! Now let's proceed to braising the egg properly.";
-      // nextStep();
+      tutorialText.textContent = "Great work! Click the can to take out the trash.";
+      egg.draggable = false;
+  }
+
+  function resetGame() {
+      if (tutorialText.textContent === "Great work! Click the can to take out the trash.") {
+          trashCan.classList.add("hidden");
+          egg.src = crackImages[0];
+          egg.style.display = "block";
+          crackStage = 0;
+          tutorialText.textContent = "Now, without breaking anything this time, drag the egg to the pot below.";
+          pot.classList.remove("hidden");
+      }
   }
 });
