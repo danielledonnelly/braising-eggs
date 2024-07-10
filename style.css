@@ -1,6 +1,5 @@
 body {
   background-image: url('images/background.png');
-  fit: cover;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -23,14 +22,16 @@ body {
   width: 200px;
   cursor: pointer;
   position: fixed;
-  top: 20%; 
+  top: 20%;
   left: 50%;
-  transform: translateX(-50%); 
+  transform: translateX(-50%);
   z-index: 1;
 }
 
-#trash-can {
-  margin-top: 20px;
+.ingredient {
+  width: 100px; 
+  cursor: pointer;
+  z-index: 10;
 }
 
 #trash-can-img {
@@ -41,10 +42,10 @@ body {
   margin: 0 auto;
 }
 
-#pot, #fire-pot {
+#trash-can, #pot, #fire-pot {
   margin-top: 20px;
   position: fixed; 
-  top: 55%;
+  top: 57%;
   left: 50%; 
   transform: translate(-50%, -50%);
   z-index: 0; 
@@ -59,9 +60,9 @@ body {
 }
 
 #fire-extinguisher {
-  position: fixed; /* Change to fixed positioning */
-  top: 30%; /* Position higher on the screen */
-  left: 50%;
+  position: fixed; 
+  top: 70%; 
+  left: 70%;
   transform: translate(-50%, -50%);
   z-index: 1;
 }
@@ -81,11 +82,11 @@ body {
 #tutorial-panel {
   width: 700px;
   background-color: #121111;
-  border: 2px solid #eaff00;
+  border: 2px solid #3D2F7E;
   border-radius: 14px;
   padding: 10px;
   position: fixed; 
-  bottom: 40px; 
+  bottom: 25px; 
   left: 50%;
   transform: translateX(-50%);
 }
