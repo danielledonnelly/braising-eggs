@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
         'images/egg-crack2.png',
         'images/egg-crack3.png',
         'images/egg-crack4.png',
+        'images/egg-crack5.png',
         'images/egg-cracked.png',
         'images/egg-cracked-sad.png'
     ];
@@ -45,10 +46,14 @@ document.addEventListener("DOMContentLoaded", function () {
         tutorialText.textContent = "Great work! Click the can to take out the trash.";
         egg.draggable = false;
         stage = 1;
+        const plopSound = new Audio('sounds/plop.wav');
+        plopSound.play();
     }
   
     function showPot() {
         if (tutorialText.textContent === "Great work! Click the can to take out the trash.") {
+            const trashSound = new Audio('sounds/trash.wav');
+            trashSound.play();
             trashCan.classList.add("hidden");
             egg.src = crackImages[0];
             egg.style.display = "block";
@@ -67,16 +72,22 @@ document.addEventListener("DOMContentLoaded", function () {
         event.preventDefault();
         egg.style.zIndex = "0";
         egg.style.position = "relative";
-        egg.style.top = "200%"; 
+        egg.style.top = "100%";
         egg.style.left = "50%";
-        egg.style.transform = "translate(-50%, 60%)";
-        tutorialText.textContent = "Well done! Now click the pot to start braising.";
+        egg.style.transform = "translate(-50%, 55%)";
         egg.draggable = false;
-        stage = 3;
+        stage = 3;  
+        const plopSound = new Audio('sounds/plop.wav');
+        plopSound.play();
+        if (stage === 2) { 
+            tutorialText.textContent = "Well done! Now click the pot to start boiling it.";
+        }
     }
   
     function igniteFire() {
         if (stage === 3) {
+            const fireSound = new Audio('sounds/fire.wav');
+            fireSound.play();
             pot.removeEventListener("click", igniteFire); // Disable further triggering
             pot.classList.add("hidden");
             firePot.classList.remove("hidden");
@@ -94,46 +105,51 @@ document.addEventListener("DOMContentLoaded", function () {
     function extinguishFire(event) {
         event.preventDefault();
         if (stage === 4) {
+            const extinguishSound = new Audio('sounds/extinguish.wav');
+            extinguishSound.play();
             fireExtinguisher.style.display = "none";
             firePot.classList.add("hidden");
             pot.classList.remove("hidden");
             tutorialText.textContent = "The fire is out. Let's make the broth.";
             stage = 5;
-            showIngredients(); // Show ingredients for dragging to the pot
+            showIngredients(); 
         }
     }
     
   
-    function crackEgg() {
-        if (stage === 0 && crackStage < crackImages.length - 1) {
-            crackStage++;
-            egg.src = crackImages[crackStage];
-            if (crackStage < crackImages.length - 2) {
-                const crackSound = new Audio('sounds/crack.wav');
-                crackSound.play();
-            }
-            if (crackStage === crackImages.length - 2) {
-                tutorialText.textContent = "Whoops! It turns out you're not supposed to crack an egg to braise it properly.";
-                egg.draggable = false;
-            }
-            if (crackStage === crackImages.length - 1) {
-                tutorialText.textContent = "Throw your broken egg in the trash.";
-                egg.draggable = true;
-                trashCan.classList.remove("hidden");
-            }
+function crackEgg() {
+    if (stage === 0 && crackStage < crackImages.length - 1) {
+        crackStage++;
+        egg.src = crackImages[crackStage];
+        if (crackStage <= crackImages.length - 2) {  
+            const crackSound = new Audio('sounds/crack.wav');
+            crackSound.play();
+        }
+
+        if (crackStage === crackImages.length - 2) {
+            tutorialText.textContent = "Whoops! It turns out you're not supposed to crack an egg to braise it properly.";
+            egg.draggable = false;
+        }
+
+        if (crackStage === crackImages.length - 1) {
+            tutorialText.textContent = "Throw your broken egg in the trash.";
+            egg.draggable = true;
+            trashCan.classList.remove("hidden");
         }
     }
+}
 
+    
     function showIngredients() {
         const ingredients = ['soy', 'soup', 'spice'];
         ingredients.forEach((ingredient, index) => {
             const element = document.createElement('img');
-            element.src = `images/${ingredient}.png`; // Ensure these paths are correct
+            element.src = `images/${ingredient}.png`;
             element.id = ingredient;
             element.classList.add('ingredient');
             element.style.position = 'absolute';
-            element.style.top = '60%'; // Set lower on the screen
-            element.style.left = `${50 + (index - 1) * 5}%`; // Adjust horizontally for closer spacing and centering
+            element.style.top = '74%'; 
+            element.style.left = `${47.5 + (index - 1) * 5}%`; 
             element.draggable = true;
             element.addEventListener('dragstart', dragStart);
             document.getElementById('step-container').appendChild(element);
@@ -144,6 +160,179 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     
     
+    
+    
+    
+    
+    
+    function dropIngredient(event) {
+        document.addEventListener("DOMContentLoaded", function () {
+    const egg = document.getElementById("egg");
+    const trashCan = document.getElementById("trash-can");
+    const tutorialText = document.getElementById("tutorial-text");
+    const pot = document.getElementById("pot");
+    const firePot = document.getElementById("fire-pot");
+    const fireExtinguisher = document.getElementById("fire-extinguisher");
+    const totalIngredients = 3;
+    let ingredientsAdded = 0;
+    let crackStage = 0;
+    let stage = 0;
+    const crackImages = [
+        'images/egg.png',
+        'images/egg-crack1.png',
+        'images/egg-crack2.png',
+        'images/egg-crack3.png',
+        'images/egg-crack4.png',
+        'images/egg-crack5.png',
+        'images/egg-cracked.png',
+        'images/egg-cracked-sad.png'
+    ];
+  
+    egg.addEventListener("click", function () {
+        if (stage === 0) {
+            crackEgg();
+        }
+    });
+  
+    egg.addEventListener("dragstart", dragStart);
+    trashCan.addEventListener("dragover", dragOver);
+    trashCan.addEventListener("drop", dropInTrash);
+    trashCan.addEventListener("click", showPot);
+    pot.addEventListener("click", igniteFire);
+  
+    function dragStart(event) {
+        event.dataTransfer.setData("text/plain", event.target.id);
+    }
+  
+    function dragOver(event) {
+        event.preventDefault();
+    }
+  
+    function dropInTrash(event) {
+        event.preventDefault();
+        egg.style.display = "none";
+        tutorialText.textContent = "Great work! Click the can to take out the trash.";
+        egg.draggable = false;
+        stage = 1;
+        const plopSound = new Audio('sounds/plop.wav');
+        plopSound.play();
+    }
+  
+    function showPot() {
+        if (tutorialText.textContent === "Great work! Click the can to take out the trash.") {
+            const trashSound = new Audio('sounds/trash.wav');
+            trashSound.play();
+            trashCan.classList.add("hidden");
+            egg.src = crackImages[0];
+            egg.style.display = "block";
+            crackStage = 0;
+            tutorialText.textContent = "Now, without breaking anything this time, drag the egg to the pot below.";
+            pot.classList.remove("hidden");
+            egg.draggable = true;
+            egg.removeEventListener("click", crackEgg);
+            pot.addEventListener("dragover", dragOver);
+            pot.addEventListener("drop", dropInPot);
+            stage = 2;
+        }
+    }
+  
+    function dropInPot(event) {
+        event.preventDefault();
+        if (stage === 2) { 
+            egg.style.zIndex = "0";
+            egg.style.position = "relative";
+            egg.style.top = "100%";
+            egg.style.left = "50%";
+            egg.style.transform = "translate(-50%, 55%)";
+            tutorialText.textContent = "Well done! Now click the pot to start braising.";
+            egg.draggable = false;
+            stage = 3;  
+            const plopSound = new Audio('sounds/plop.wav');
+            plopSound.play();
+        }
+    }
+  
+    function igniteFire() {
+        if (stage === 3) {
+            const fireSound = new Audio('sounds/fire.wav');
+            fireSound.play();
+            pot.removeEventListener("click", igniteFire); // Disable further triggering
+            pot.classList.add("hidden");
+            firePot.classList.remove("hidden");
+            tutorialText.textContent = "Uh oh, that's not good! Put out the fire!";
+            fireExtinguisher.classList.remove("hidden");
+            stage = 4;
+        }
+    }
+    
+  
+    fireExtinguisher.addEventListener("dragstart", dragStart);
+    firePot.addEventListener("dragover", dragOver);
+    firePot.addEventListener("drop", extinguishFire);
+  
+    function extinguishFire(event) {
+        event.preventDefault();
+        if (stage === 4) {
+            const extinguishSound = new Audio('sounds/extinguish.wav');
+            extinguishSound.play();
+            fireExtinguisher.style.display = "none";
+            firePot.classList.add("hidden");
+            pot.classList.remove("hidden");
+            tutorialText.textContent = "The fire is out. Let's make the broth.";
+            stage = 5;
+            showIngredients(); 
+        }
+    }
+    
+  
+function crackEgg() {
+    if (stage === 0 && crackStage < crackImages.length - 1) {
+        crackStage++;
+        egg.src = crackImages[crackStage];
+        if (crackStage <= crackImages.length - 2) {  
+            const crackSound = new Audio('sounds/crack.wav');
+            crackSound.play();
+        }
+
+        if (crackStage === crackImages.length - 2) {
+            tutorialText.textContent = "Whoops! It turns out you're not supposed to crack an egg to braise it properly.";
+            egg.draggable = false;
+        }
+
+        if (crackStage === crackImages.length - 1) {
+            tutorialText.textContent = "Throw your broken egg in the trash.";
+            egg.draggable = true;
+            trashCan.classList.remove("hidden");
+        }
+    }
+}
+
+    
+    function showIngredients() {
+        const ingredients = ['soy', 'soup', 'spice'];
+        ingredients.forEach((ingredient, index) => {
+            const element = document.createElement('img');
+            element.src = `images/${ingredient}.png`;
+            element.id = ingredient;
+            element.classList.add('ingredient');
+            element.style.position = 'absolute';
+            element.style.top = '74%'; 
+            element.style.left = `${47.5 + (index - 1) * 5}%`; 
+            element.draggable = true;
+            element.addEventListener('dragstart', dragStart);
+            document.getElementById('step-container').appendChild(element);
+        });
+    
+        pot.addEventListener('dragover', dragOver);
+        pot.addEventListener('drop', dropIngredient);
+    }
+    
+    
+    
+    
+    
+    
+    
     function dropIngredient(event) {
         event.preventDefault();
         if (event.dataTransfer.getData("text/plain") && (event.target.id === 'pot' || event.target.parentNode.id === 'pot')) {
@@ -151,7 +340,23 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById(ingredient).classList.add('hidden'); // Hide only the dragged ingredient
             ingredientsAdded++;
             if (ingredientsAdded === totalIngredients) {
-                tutorialText.textContent = "Great work! Now stir everything together by clicking the pot.";
+                tutorialText.textContent = "Nice! Now stir everything together by clicking the pot.";
+                pot.removeEventListener('dragover', dragOver);
+                pot.removeEventListener('drop', dropIngredient);
+            }
+        }
+    }
+
+    
+  });
+  
+        event.preventDefault();
+        if (event.dataTransfer.getData("text/plain") && (event.target.id === 'pot' || event.target.parentNode.id === 'pot')) {
+            let ingredient = event.dataTransfer.getData("text/plain");
+            document.getElementById(ingredient).classList.add('hidden'); // Hide only the dragged ingredient
+            ingredientsAdded++;
+            if (ingredientsAdded === totalIngredients) {
+                tutorialText.textContent = "Nice! Now stir everything together by clicking the pot.";
                 pot.removeEventListener('dragover', dragOver);
                 pot.removeEventListener('drop', dropIngredient);
             }
