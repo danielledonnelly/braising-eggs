@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const pot = document.getElementById("pot");
     const firePot = document.getElementById("fire-pot");
     const fireExtinguisher = document.getElementById("fire-extinguisher");
-    let jar, jamJar;
+    let endTriggered = false; // Flag to track if the ending has been triggered
     let ingredientsAdded = 0;
     let stage = 0;
     let crackStage = 0;
@@ -13,8 +13,9 @@ document.addEventListener("DOMContentLoaded", function () {
     let slurpStage = 0;
     let crunchStage = 0;
     let ingredientIDs = [];
+    let startTime;
+    let endTime;
     const crunchShapes = ['images/crunch.png']
-    const maxBites = 50
     const totalIngredients = 3;
     const crackImages = [
         'images/egg.png',
@@ -76,6 +77,8 @@ document.addEventListener("DOMContentLoaded", function () {
             mushEgg();
         }
     });
+
+    startTime = new Date();
     
 
     egg.addEventListener("dragstart", dragStart);
@@ -337,32 +340,66 @@ document.addEventListener("DOMContentLoaded", function () {
             crunchDiv.style.transform = `rotate(${Math.random() * 360}deg)`; // Apply random rotation
             document.body.appendChild(crunchDiv);
             playSound('sounds/crunch.wav');
-            checkIfScreenIsCovered();
+            checkIfScreenIsCovered(); // Call the function here to check coverage after each bite
         }
     }
+    
     
     function checkIfScreenIsCovered() {
         const bodyRect = document.body.getBoundingClientRect();
         const crunchDivs = document.querySelectorAll('div[style*="background-image"]');
-        let coveredArea = 0;
+        const totalArea = bodyRect.width * bodyRect.height;
     
+        // Create a 2D array to represent the grid
+        const gridSize = 50; // Define the size of each grid cell
+        const gridWidth = Math.ceil(bodyRect.width / gridSize);
+        const gridHeight = Math.ceil(bodyRect.height / gridSize);
+        const grid = Array.from({ length: gridHeight }, () => Array(gridWidth).fill(false));
+    
+        // Mark the grid cells covered by each crunchDiv
         crunchDivs.forEach(crunchDiv => {
             const rect = crunchDiv.getBoundingClientRect();
     
-            // Calculate the intersection area with the body
-            const x_overlap = Math.max(0, Math.min(rect.right, bodyRect.right) - Math.max(rect.left, bodyRect.left));
-            const y_overlap = Math.max(0, Math.min(rect.bottom, bodyRect.bottom) - Math.max(rect.top, bodyRect.top));
-            const overlapArea = x_overlap * y_overlap;
+            const startX = Math.floor((rect.left - bodyRect.left) / gridSize);
+            const endX = Math.ceil((rect.right - bodyRect.left) / gridSize);
+            const startY = Math.floor((rect.top - bodyRect.top) / gridSize);
+            const endY = Math.ceil((rect.bottom - bodyRect.top) / gridSize);
     
-            coveredArea += overlapArea;
+            for (let y = startY; y < endY; y++) {
+                for (let x = startX; x < endX; x++) {
+                    if (x >= 0 && x < gridWidth && y >= 0 && y < gridHeight) {
+                        grid[y][x] = true;
+                    }
+                }
+            }
         });
     
-        const totalArea = bodyRect.width * bodyRect.height;
+        // Calculate the covered area based on the grid cells
+        let coveredArea = 0;
+        grid.forEach(row => {
+            row.forEach(cell => {
+                if (cell) {
+                    coveredArea += gridSize * gridSize;
+                }
+            });
+        });
+    
         if (coveredArea >= totalArea * 0.9) { // Check for 90% coverage
-            console.log('The screen is covered with crunch shapes.');
-            // Optionally, you can add any action here when the screen is covered
+            // Stop the timer
+            endTime = new Date();
+            const elapsedTime = (endTime - startTime) / 1000; // Time in seconds
+    
+            // Format the time as MM:SS.ss
+            const minutes = Math.floor(elapsedTime / 60);
+            const seconds = elapsedTime % 60;
+            const formattedTime = `${String(minutes).padStart(2, '0')}:${seconds.toFixed(2).padStart(5, '0')}`;
+    
+            tutorialText.textContent = `You made egg jam in ${formattedTime}`;
         }
     }
+    
+    
+    
     
     function playSound(soundFile) {
         const sound = new Audio(soundFile);
