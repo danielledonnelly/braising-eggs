@@ -5,9 +5,14 @@ document.addEventListener("DOMContentLoaded", function () {
     const pot = document.getElementById("pot");
     const firePot = document.getElementById("fire-pot");
     const fireExtinguisher = document.getElementById("fire-extinguisher");
+    let jar, jamJar;
     let ingredientsAdded = 0;
-    let crackStage = 0;
     let stage = 0;
+    let crackStage = 0;
+    let mushStage = 0;
+    let slurpStage = 0;
+    let crunchStage = 0;
+    let ingredientIDs = [];
     const totalIngredients = 3;
     const crackImages = [
         'images/egg.png',
@@ -19,12 +24,37 @@ document.addEventListener("DOMContentLoaded", function () {
         'images/egg-cracked.png',
         'images/egg-cracked-sad.png'
     ];
-
+    const mushImages = [
+        'images/egg-mush1.png',
+        'images/egg-mush2.png',
+        'images/egg-mush3.png',
+        'images/egg-mush4.png',
+        'images/egg-mush5.png',
+        'images/egg-mush6.png'
+    ];
+    const slurpImages = [
+        'images/egg-slurp1.png',
+        'images/egg-slurp2.png',
+        'images/egg-slurp3.png',
+        'images/egg-slurp4.png',
+        'images/egg-slurp5.png',
+        'images/egg-slurp6.png',
+        'images/egg-slurp7.png',
+        'images/egg-slurp8.png',
+        'images/egg-slurp9.png'
+    ];
+    const crunchImages = [
+        'images/egg-crunch1.png',
+        'images/egg-crunch2.png'
+    ];
     egg.addEventListener("click", function () {
         if (stage === 0) {
             crackEgg();
+        } else if (stage === 6) {
+            mushEgg();
         }
     });
+    
 
     egg.addEventListener("dragstart", dragStart);
     trashCan.addEventListener("dragover", dragOver);
@@ -125,6 +155,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function showIngredients() {
         const ingredients = ['soy', 'soup', 'spice'];
+        ingredientIDs = ingredients; 
         ingredients.forEach((ingredient, index) => {
             const element = document.createElement('img');
             element.src = `images/${ingredient}.png`;
@@ -137,23 +168,26 @@ document.addEventListener("DOMContentLoaded", function () {
             element.addEventListener('dragstart', dragStart);
             document.getElementById('step-container').appendChild(element);
         });
-
+    
         pot.addEventListener('dragover', dragOver);
         pot.addEventListener('drop', dropIngredient);
     }
-
     function dropIngredient(event) {
         event.preventDefault();
-        let ingredient = event.dataTransfer.getData("text/plain");
-        if (ingredient && (event.target.id === 'pot' || event.target.parentNode.id === 'pot')) {
-            document.getElementById(ingredient).classList.add('hidden'); // Hide only the dragged ingredient
-            ingredientsAdded++;
-            if (ingredientsAdded === totalIngredients) {
-                tutorialText.textContent = "Nice! Now stir everything together by shaking the pot.";
-                activatePotShaking();
+        let ingredientID = event.dataTransfer.getData("text/plain");
+    
+        if (ingredientIDs.includes(ingredientID)) {
+            if (ingredientID && (event.target.id === 'pot' || event.target.parentNode.id === 'pot')) {
+                document.getElementById(ingredientID).classList.add('hidden'); // Hide only the dragged ingredient
+                ingredientsAdded++;
+                if (ingredientsAdded === totalIngredients) {
+                    tutorialText.textContent = "Nice! Now stir everything together by shaking the pot.";
+                    activatePotShaking();
+                }
             }
         }
     }
+    
 
     function activatePotShaking() {
         pot.setAttribute('draggable', 'true');
@@ -164,15 +198,103 @@ document.addEventListener("DOMContentLoaded", function () {
     function potShakeStart(event) {
         console.log("Pot shaking starts");
     }
-
+    
     function potShakeEnd(event) {
         console.log("Pot shaking ends");
-        tutorialText.textContent = "Well done! The ingredients are mixed.";
-        stage = 6;  // Advance to next stage
+        tutorialText.textContent = "Well done! The egg has been braised.";
+        tutorialText.textContent = "Now it's time to mush your egg into egg jam!";
+        stage = 6;
         pot.removeAttribute('draggable');
         pot.removeEventListener('dragstart', potShakeStart);
         pot.removeEventListener('dragend', potShakeEnd);
+        // Add event listeners to both the pot and the egg for mushing
+        egg.addEventListener("click", mushEgg);
+        pot.addEventListener("click", mushEgg);
     }
+
+    function mushEgg() {
+        if (stage === 6 && mushStage < mushImages.length) {
+            egg.src = mushImages[mushStage++];
+            playSound('sounds/mush.wav');
+            if (mushStage === mushImages.length) {
+                tutorialText.textContent = "Your egg jam is ready! Let's put it in a nice jar.";
+                egg.removeEventListener("click", mushEgg);  
+                pot.removeEventListener("click", mushEgg);  
+                displayJar();
+            }
+        }
+    }
+
+    function displayJar() {
+        jar = document.createElement('img');
+        jar.src = 'images/jar.png';  
+        jar.id = 'jar';
+        jar.classList.add('pointer')
+        jar.style.position = 'absolute';
+        jar.style.top = '10%';  
+        jar.style.left = '50%';
+        jar.style.transform = 'translateX(-50%)';
+        jar.draggable = true;
+        document.body.appendChild(jar); 
+    
+        jar.addEventListener('dragstart', dragStart);
+        jar.addEventListener('dragover', allowDrop);  // This is not needed for the jar but the pot.
+        pot.addEventListener('dragover', allowDrop);
+        pot.addEventListener('drop', handleJarDrop);
+    }
+    
+    
+    function allowDrop(event) {
+        event.preventDefault();
+    }
+    
+    function handleJarDrop(event) {
+        event.preventDefault();
+        if (event.dataTransfer.getData("text/plain") === 'jar') {
+            jar.src = 'images/jam-jar.png';  // Ensure this path is correct
+            jar.style.top = '50%';  // Adjust to place jar correctly over the pot
+            egg.style.display = 'none';  // Hide the egg
+            pot.style.display = 'none';  // Hide the pot
+            tutorialText.textContent = "Your egg jam is done! There's only one thing left to do now...";
+            jar.draggable = false;
+            jar.classList.add('pointer')
+            jar.removeEventListener('dragstart', dragStart);
+            pot.removeEventListener('dragover', allowDrop);
+            pot.removeEventListener('drop', handleJarDrop);
+            jar.addEventListener('click', eatJam);
+        }
+    }
+    
+    function eatJam() {
+        if (slurpStage === 0) {  // This checks if it's the first slurp
+            document.body.style.backgroundImage = "url('images/background2.png')";
+        }
+        
+        if (slurpStage < slurpImages.length) {
+            jar.src = slurpImages[slurpStage++];
+            playSound('sounds/slurp.wav');
+            if (slurpStage === slurpImages.length) {
+                tutorialText.textContent = "There's only one thing left to do now...";
+                jar.removeEventListener("click", eatJam);
+                jar.addEventListener("click", crunchJar);
+            }
+        }
+    }
+    
+    function crunchJar() {
+        if (crunchStage === 0) { 
+            document.body.style.backgroundImage = "url('images/background3.png')";
+        }
+        if (crunchStage < crunchImages.length) {
+            jar.src = crunchImages[crunchStage++];
+            playSound('sounds/crunch.wav');
+            if (crunchStage === crunchImages.length) {
+                tutorialText.textContent = "You've completely finished the jar!";
+                jar.removeEventListener('click', crunchJar);  // Optionally remove listener if no further action required
+            }
+        }
+    }
+
 
     function playSound(soundFile) {
         const sound = new Audio(soundFile);
