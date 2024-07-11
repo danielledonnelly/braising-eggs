@@ -13,6 +13,8 @@ document.addEventListener("DOMContentLoaded", function () {
     let slurpStage = 0;
     let crunchStage = 0;
     let ingredientIDs = [];
+    const crunchShapes = ['images/crunch.png']
+    const maxBites = 50
     const totalIngredients = 3;
     const crackImages = [
         'images/egg.png',
@@ -45,7 +47,27 @@ document.addEventListener("DOMContentLoaded", function () {
     ];
     const crunchImages = [
         'images/egg-crunch1.png',
-        'images/egg-crunch2.png'
+        'images/egg-crunch2.png',
+        'images/egg-crunch3.png',
+        'images/egg-crunch4.png',
+        'images/egg-crunch5.png',
+        'images/egg-crunch6.png',
+        'images/egg-crunch7.png',
+        'images/egg-crunch8.png',
+        'images/egg-crunch9.png',
+        'images/egg-crunch10.png',
+        'images/egg-crunch11.png',
+        'images/egg-crunch12.png',
+        'images/egg-crunch13.png',
+        'images/egg-crunch14.png',
+        'images/egg-crunch15.png',
+        'images/egg-crunch16.png',
+        'images/egg-crunch17.png',
+        'images/egg-crunch18.png',
+        'images/egg-crunch19.png',
+        'images/egg-crunch20.png',
+        'images/egg-crunch21.png',
+        'images/egg-crunch22.png',
     ];
     egg.addEventListener("click", function () {
         if (stage === 0) {
@@ -252,7 +274,7 @@ document.addEventListener("DOMContentLoaded", function () {
         event.preventDefault();
         if (event.dataTransfer.getData("text/plain") === 'jar') {
             jar.src = 'images/jam-jar.png';  // Ensure this path is correct
-            jar.style.top = '50%';  // Adjust to place jar correctly over the pot
+            jar.style.top = '40%';  // Adjust to place jar correctly over the pot
             egg.style.display = 'none';  // Hide the egg
             pot.style.display = 'none';  // Hide the pot
             tutorialText.textContent = "Your egg jam is done! There's only one thing left to do now...";
@@ -274,7 +296,6 @@ document.addEventListener("DOMContentLoaded", function () {
             jar.src = slurpImages[slurpStage++];
             playSound('sounds/slurp.wav');
             if (slurpStage === slurpImages.length) {
-                tutorialText.textContent = "There's only one thing left to do now...";
                 jar.removeEventListener("click", eatJam);
                 jar.addEventListener("click", crunchJar);
             }
@@ -289,15 +310,66 @@ document.addEventListener("DOMContentLoaded", function () {
             jar.src = crunchImages[crunchStage++];
             playSound('sounds/crunch.wav');
             if (crunchStage === crunchImages.length) {
-                tutorialText.textContent = "You've completely finished the jar!";
-                jar.removeEventListener('click', crunchJar);  // Optionally remove listener if no further action required
+                jar.removeEventListener('click', crunchJar);
+                enableScreenEating(); // Enable screen eating only after the jar is fully eaten
+                document.body.style.cursor = 'pointer'; // Set cursor to pointer
             }
         }
     }
-
-
+    
+    function enableScreenEating() {
+        document.addEventListener('click', eatScreen);
+    }
+    
+    function eatScreen(event) {
+        if (crunchStage === 22) { // Only allow eating the screen if crunchStage is 22
+            const crunchShape = crunchShapes[0]; // Use the crunch-png image
+            const crunchDiv = document.createElement('div');
+            const size = 600; // Size of each bite
+    
+            crunchDiv.style.position = 'absolute';
+            crunchDiv.style.top = `${event.clientY - size / 2}px`;
+            crunchDiv.style.left = `${event.clientX - size / 2}px`;
+            crunchDiv.style.width = `${size}px`; 
+            crunchDiv.style.height = `${size}px`; 
+            crunchDiv.style.backgroundImage = `url(${crunchShape})`;
+            crunchDiv.style.backgroundSize = 'cover';
+            crunchDiv.style.transform = `rotate(${Math.random() * 360}deg)`; // Apply random rotation
+            document.body.appendChild(crunchDiv);
+            playSound('sounds/crunch.wav');
+            checkIfScreenIsCovered();
+        }
+    }
+    
+    function checkIfScreenIsCovered() {
+        const bodyRect = document.body.getBoundingClientRect();
+        const crunchDivs = document.querySelectorAll('div[style*="background-image"]');
+        let coveredArea = 0;
+    
+        crunchDivs.forEach(crunchDiv => {
+            const rect = crunchDiv.getBoundingClientRect();
+    
+            // Calculate the intersection area with the body
+            const x_overlap = Math.max(0, Math.min(rect.right, bodyRect.right) - Math.max(rect.left, bodyRect.left));
+            const y_overlap = Math.max(0, Math.min(rect.bottom, bodyRect.bottom) - Math.max(rect.top, bodyRect.top));
+            const overlapArea = x_overlap * y_overlap;
+    
+            coveredArea += overlapArea;
+        });
+    
+        const totalArea = bodyRect.width * bodyRect.height;
+        if (coveredArea >= totalArea * 0.9) { // Check for 90% coverage
+            console.log('The screen is covered with crunch shapes.');
+            // Optionally, you can add any action here when the screen is covered
+        }
+    }
+    
     function playSound(soundFile) {
         const sound = new Audio(soundFile);
         sound.play();
     }
-});
+    
+    // Disable scrollbars
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+})    
