@@ -358,7 +358,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     
         const totalArea = bodyRect.width * bodyRect.height;
-        (coveredArea >= totalArea * 0.9 && !endTimeRecorded); { // Check for 90% coverage
+        if (coveredArea >= totalArea * 0.9 && !endTimeRecorded) { // Check for 90% coverage
             endTimeRecorded = true;
             endTime = new Date(); // End the timer
             let timeTaken = new Date(endTime - startTime);
@@ -368,7 +368,6 @@ document.addEventListener("DOMContentLoaded", function () {
             tutorialText.textContent = `You made egg jam in ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${milliseconds.toString().padStart(3, '0')}`; // Display the completion time
         }
     }
-    
     
     
     function playSound(soundFile) {
