@@ -16,7 +16,6 @@ document.addEventListener("DOMContentLoaded", function () {
     let crunchStage = 0;
     let ingredientIDs = [];
     const crunchShapes = ['images/crunch.png']
-    const maxBites = 50
     const totalIngredients = 3;
     const crackImages = [
         'images/egg.png',
@@ -358,7 +357,8 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     
         const totalArea = bodyRect.width * bodyRect.height;
-        if (coveredArea >= totalArea * 0.9 && !endTimeRecorded) { // Check for 90% coverage
+        // This doesn't work the way I wanted it to but I am at peace with that 
+        if (coveredArea >= totalArea * 0.9 && !endTimeRecorded) { // Check for 90% coverage 
             endTimeRecorded = true;
             endTime = new Date(); // End the timer
             let timeTaken = new Date(endTime - startTime);
