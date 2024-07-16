@@ -260,7 +260,7 @@ document.addEventListener("DOMContentLoaded", function () {
         document.body.appendChild(jar); 
     
         jar.addEventListener('dragstart', dragStart);
-        jar.addEventListener('dragover', allowDrop);  // This is not needed for the jar but the pot.
+        jar.addEventListener('dragover', allowDrop); 
         pot.addEventListener('dragover', allowDrop);
         pot.addEventListener('drop', handleJarDrop);
     }
@@ -273,7 +273,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function handleJarDrop(event) {
         event.preventDefault();
         if (event.dataTransfer.getData("text/plain") === 'jar') {
-            jar.src = 'images/jam-jar.png';  // Ensure this path is correct
+            jar.src = 'images/jam-jar.png';  
             jar.style.top = '40%';  // Adjust to place jar correctly over the pot
             egg.style.display = 'none';  // Hide the egg
             pot.style.display = 'none';  // Hide the pot
@@ -312,7 +312,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (crunchStage === crunchImages.length) {
                 jar.removeEventListener('click', crunchJar);
                 enableScreenEating(); // Enable screen eating only after the jar is fully eaten
-                document.body.style.cursor = 'pointer'; // Set cursor to pointer
+                document.body.style.cursor = 'pointer'; 
             }
         }
     }
@@ -325,8 +325,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (crunchStage === 22) { // Only allow eating the screen if crunchStage is 22
             const crunchShape = crunchShapes[0]; // Use the crunch-png image
             const crunchDiv = document.createElement('div');
-            const size = 600; // Size of each bite
-    
+            const size = 600;
             crunchDiv.style.position = 'absolute';
             crunchDiv.style.top = `${event.clientY - size / 2}px`;
             crunchDiv.style.left = `${event.clientX - size / 2}px`;
