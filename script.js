@@ -1,5 +1,8 @@
+// Welcome to Braising Eggs, a 2D drag and drop game where you make egg jam (or as it's more commonly known, mayonnaise).
+// This is my first game jam project. It was make for eggjam, a game jam with a theme of "raising eggs."
 let startTime;
 let endTimeRecorded = false; 
+// The code pertaining to time was added because as I was play-testing, I found it really fun to go as fast as possible. This inspired me to add a speedrun timer.
 document.addEventListener("DOMContentLoaded", function () {
     startTime = new Date();
     const egg = document.getElementById("egg");
@@ -8,6 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const pot = document.getElementById("pot");
     const firePot = document.getElementById("fire-pot");
     const fireExtinguisher = document.getElementById("fire-extinguisher");
+    // While working on this project I discovered that culinary games (or any simple 2D games involving repetitve processes) can be simplified greatly by adding stages like these in order to track progress.
     let ingredientsAdded = 0;
     let stage = 0;
     let crackStage = 0;
@@ -17,6 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let ingredientIDs = [];
     const crunchShapes = ['images/crunch.png']
     const totalIngredients = 3;
+    // Since braising an egg is a step-by-step process that involves a lot of individual changes, I made arrays using images I crafted in Canva to depict the egg's current state.
     const crackImages = [
         'images/egg.png',
         'images/egg-crack1.png',
@@ -70,6 +75,8 @@ document.addEventListener("DOMContentLoaded", function () {
         'images/egg-crunch21.png',
         'images/egg-crunch22.png',
     ];
+
+    // Initial egg image array progression
     egg.addEventListener("click", function () {
         if (stage === 0) {
             crackEgg();
@@ -78,6 +85,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+    // Default drag-and-drop events
     egg.addEventListener("dragstart", dragStart);
     trashCan.addEventListener("dragover", dragOver);
     trashCan.addEventListener("drop", dropInTrash);
@@ -87,39 +95,20 @@ document.addEventListener("DOMContentLoaded", function () {
     firePot.addEventListener("dragover", dragOver);
     firePot.addEventListener("drop", extinguishFire);
 
-    // Trying to add mobile functionality
+    // Mobile drag-and-drop events (not currently functional)
     egg.addEventListener("touchstart", dragStart);
-    fireExtinguisher.addEventListener("touchstart", dragStart);
-
-    egg.addEventListener("dragstart", dragStart);
-    fireExtinguisher.addEventListener("dragstart", dragStart);
-
     trashCan.addEventListener("touchmove", dragOver);
-    pot.addEventListener("touchmove", dragOver);
-    firePot.addEventListener("touchmove", dragOver);
-
-    trashCan.addEventListener("dragover", dragOver);
-    pot.addEventListener("dragover", dragOver);
-    firePot.addEventListener("dragover", dragOver);
-
     trashCan.addEventListener("touchend", dropInTrash);
-    pot.addEventListener("touchend", dropInPot);
-    firePot.addEventListener("touchend", extinguishFire);
-
-    trashCan.addEventListener("drop", dropInTrash);
-    pot.addEventListener("drop", dropInPot);
-    firePot.addEventListener("drop", extinguishFire);
-
-    trashCan.addEventListener("drop", dropInTrash);
-    pot.addEventListener("drop", dropInPot);
-    firePot.addEventListener("drop", extinguishFire);
-
-    // Not yet functional
+    trashCan.addEventListener("touchend", showPot); 
+    pot.addEventListener("touchend", igniteFire); 
+    fireExtinguisher.addEventListener("touchstart", dragStart);
+    firePot.addEventListener("touchmove", dragOver);
+    firePot.addEventListener("touchend", extinguishFire); 
 
 
+    // Drag and drop
     function dragStart(event) {
         if (event.type === "touchstart") {
-            const touch = event.touches[0];
             event.dataTransfer = { setData: function(_, id) { this.id = id; } };
             event.dataTransfer.setData("text/plain", event.target.id);
             event.preventDefault();
@@ -132,6 +121,23 @@ document.addEventListener("DOMContentLoaded", function () {
         event.preventDefault();
     }
 
+    // Crack the egg
+    function crackEgg() {
+        if (crackStage < crackImages.length - 1) {
+            egg.src = crackImages[++crackStage];
+            playSound('sounds/crack.wav');
+            if (crackStage === crackImages.length - 2) {
+                tutorialText.textContent = "Whoops! It turns out you're not supposed to crack an egg to braise it properly.";
+                egg.draggable = false;
+            } else if (crackStage === crackImages.length - 1) {
+                tutorialText.textContent = "Throw your broken egg in the trash.";
+                egg.draggable = true;
+                trashCan.classList.remove("hidden");
+            }
+        }
+    }
+
+    // Throw the egg away
     function dropInTrash(event) {
         event.preventDefault();
         egg.style.display = "none";
@@ -141,6 +147,7 @@ document.addEventListener("DOMContentLoaded", function () {
         playSound('sounds/plop.wav');
     }
 
+    // Show pot
     function showPot() {
         if (tutorialText.textContent === "Great work! Click the can to take out the trash.") {
             playSound('sounds/trash.wav');
@@ -157,6 +164,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    // Drop the egg in the pot
     function dropInPot(event) {
         event.preventDefault();
         if (stage === 2) {
@@ -172,6 +180,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    // Boil the pot
     function igniteFire() {
         if (stage === 3) {
             playSound('sounds/fire.wav');
@@ -184,6 +193,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    // Put out the fire
     function extinguishFire(event) {
         event.preventDefault();
         if (stage === 4) {
@@ -197,21 +207,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    function crackEgg() {
-        if (crackStage < crackImages.length - 1) {
-            egg.src = crackImages[++crackStage];
-            playSound('sounds/crack.wav');
-            if (crackStage === crackImages.length - 2) {
-                tutorialText.textContent = "Whoops! It turns out you're not supposed to crack an egg to braise it properly.";
-                egg.draggable = false;
-            } else if (crackStage === crackImages.length - 1) {
-                tutorialText.textContent = "Throw your broken egg in the trash.";
-                egg.draggable = true;
-                trashCan.classList.remove("hidden");
-            }
-        }
-    }
-
+    // Display ingredients
     function showIngredients() {
         const ingredients = ['soy', 'soup', 'spice'];
         ingredientIDs = ingredients; 
@@ -231,13 +227,14 @@ document.addEventListener("DOMContentLoaded", function () {
         pot.addEventListener('dragover', dragOver);
         pot.addEventListener('drop', dropIngredient);
     }
+
+    // Add ingredients
     function dropIngredient(event) {
         event.preventDefault();
         let ingredientID = event.dataTransfer.getData("text/plain");
-    
         if (ingredientIDs.includes(ingredientID)) {
             if (ingredientID && (event.target.id === 'pot' || event.target.parentNode.id === 'pot')) {
-                document.getElementById(ingredientID).classList.add('hidden'); // Hide only the dragged ingredient
+                document.getElementById(ingredientID).classList.add('hidden'); 
                 ingredientsAdded++;
                 if (ingredientsAdded === totalIngredients) {
                     tutorialText.textContent = "Nice! Now stir everything together by shaking the pot.";
@@ -246,19 +243,19 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
     }
-    
 
+    // Stir the pot
     function activatePotShaking() {
         pot.setAttribute('draggable', 'true');
         pot.addEventListener('dragstart', potShakeStart);
         pot.addEventListener('dragend', potShakeEnd);
     }
 
-    function potShakeStart(event) {
+    function potShakeStart() {
         console.log("Pot shaking starts");
     }
     
-    function potShakeEnd(event) {
+    function potShakeEnd() {
         console.log("Pot shaking ends");
         tutorialText.textContent = "Well done! The egg has been braised.";
         tutorialText.textContent = "Now it's time to mush your egg into egg jam!";
@@ -270,6 +267,7 @@ document.addEventListener("DOMContentLoaded", function () {
         pot.addEventListener("click", mushEgg);
     }
 
+    // Mush the egg
     function mushEgg() {
         if (stage === 6 && mushStage < mushImages.length) {
             egg.src = mushImages[mushStage++];
@@ -283,6 +281,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    // Display jar
     function displayJar() {
         jar = document.createElement('img');
         jar.src = 'images/jar.png';  
@@ -294,18 +293,17 @@ document.addEventListener("DOMContentLoaded", function () {
         jar.style.transform = 'translateX(-50%)';
         jar.draggable = true;
         document.body.appendChild(jar); 
-    
         jar.addEventListener('dragstart', dragStart);
         jar.addEventListener('dragover', allowDrop); 
         pot.addEventListener('dragover', allowDrop);
         pot.addEventListener('drop', handleJarDrop);
     }
     
-    
     function allowDrop(event) {
         event.preventDefault();
     }
     
+    // Add egg jam to jar
     function handleJarDrop(event) {
         event.preventDefault();
         if (event.dataTransfer.getData("text/plain") === 'jar') {
@@ -323,6 +321,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
     
+    // Eat egg jam
     function eatJam() {
         if (slurpStage === 0) {  
             document.body.style.backgroundImage = "url('images/background2.png')";
@@ -338,6 +337,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
     
+    // Eat jar
     function crunchJar() {
         if (crunchStage === 0) { 
             document.body.style.backgroundImage = "url('images/background3.png')";
@@ -353,37 +353,36 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
     
-    
+    // Eat screen
     function enableScreenEating() {
         document.addEventListener('click', eatScreen);
     }
     
     function eatScreen(event) {
-        const crunchShape = crunchShapes[0]; 
+        const crunchShape = crunchShapes[0];
         const crunchDiv = document.createElement('div');
         const size = 600;
         crunchDiv.style.position = 'absolute';
         crunchDiv.style.top = `${event.clientY - size / 2}px`;
         crunchDiv.style.left = `${event.clientX - size / 2}px`;
-        crunchDiv.style.width = `${size}px`; 
-        crunchDiv.style.height = `${size}px`; 
+        crunchDiv.style.width = `${size}px`;
+        crunchDiv.style.height = `${size}px`;
         crunchDiv.style.backgroundImage = `url(${crunchShape})`;
         crunchDiv.style.backgroundSize = 'cover';
-        crunchDiv.style.transform = `rotate(${Math.random() * 360}deg)`; 
+        crunchDiv.style.transform = `rotate(${Math.random() * 360}deg)`;
         document.body.appendChild(crunchDiv);
         playSound('sounds/crunch.wav');
     
-        if (!endTimeRecorded) { e
+        if (!endTimeRecorded) {
             endTimeRecorded = true;
-            endTime = new Date(); 
+            endTime = new Date();
             let timeTaken = new Date(endTime - startTime);
             let minutes = timeTaken.getUTCMinutes();
             let seconds = timeTaken.getUTCSeconds();
             let milliseconds = timeTaken.getUTCMilliseconds();
             tutorialText.textContent = `You made egg jam in ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${milliseconds.toString().padStart(3, '0')}`;
         }
-    }
-    
+    }    
     
     function playSound(soundFile) {
         const sound = new Audio(soundFile);
