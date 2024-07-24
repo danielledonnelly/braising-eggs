@@ -87,8 +87,45 @@ document.addEventListener("DOMContentLoaded", function () {
     firePot.addEventListener("dragover", dragOver);
     firePot.addEventListener("drop", extinguishFire);
 
+    // Trying to add mobile functionality
+    egg.addEventListener("touchstart", dragStart);
+    fireExtinguisher.addEventListener("touchstart", dragStart);
+
+    egg.addEventListener("dragstart", dragStart);
+    fireExtinguisher.addEventListener("dragstart", dragStart);
+
+    trashCan.addEventListener("touchmove", dragOver);
+    pot.addEventListener("touchmove", dragOver);
+    firePot.addEventListener("touchmove", dragOver);
+
+    trashCan.addEventListener("dragover", dragOver);
+    pot.addEventListener("dragover", dragOver);
+    firePot.addEventListener("dragover", dragOver);
+
+    trashCan.addEventListener("touchend", dropInTrash);
+    pot.addEventListener("touchend", dropInPot);
+    firePot.addEventListener("touchend", extinguishFire);
+
+    trashCan.addEventListener("drop", dropInTrash);
+    pot.addEventListener("drop", dropInPot);
+    firePot.addEventListener("drop", extinguishFire);
+
+    trashCan.addEventListener("drop", dropInTrash);
+    pot.addEventListener("drop", dropInPot);
+    firePot.addEventListener("drop", extinguishFire);
+
+    // Not yet functional
+
+
     function dragStart(event) {
-        event.dataTransfer.setData("text/plain", event.target.id);
+        if (event.type === "touchstart") {
+            const touch = event.touches[0];
+            event.dataTransfer = { setData: function(_, id) { this.id = id; } };
+            event.dataTransfer.setData("text/plain", event.target.id);
+            event.preventDefault();
+        } else {
+            event.dataTransfer.setData("text/plain", event.target.id);
+        }
     }
 
     function dragOver(event) {
