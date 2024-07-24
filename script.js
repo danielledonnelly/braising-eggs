@@ -266,7 +266,6 @@ document.addEventListener("DOMContentLoaded", function () {
         pot.removeAttribute('draggable');
         pot.removeEventListener('dragstart', potShakeStart);
         pot.removeEventListener('dragend', potShakeEnd);
-        // Add event listeners to both the pot and the egg for mushing
         egg.addEventListener("click", mushEgg);
         pot.addEventListener("click", mushEgg);
     }
@@ -311,9 +310,9 @@ document.addEventListener("DOMContentLoaded", function () {
         event.preventDefault();
         if (event.dataTransfer.getData("text/plain") === 'jar') {
             jar.src = 'images/jam-jar.png';  
-            jar.style.top = '40%';  // Adjust to place jar correctly over the pot
-            egg.style.display = 'none';  // Hide the egg
-            pot.style.display = 'none';  // Hide the pot
+            jar.style.top = '40%';  
+            egg.style.display = 'none';  
+            pot.style.display = 'none';  
             tutorialText.textContent = "Your egg jam is done! There's only one thing left to do now...";
             jar.draggable = false;
             jar.classList.add('pointer')
@@ -325,7 +324,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     
     function eatJam() {
-        if (slurpStage === 0) {  // This checks if it's the first slurp
+        if (slurpStage === 0) {  
             document.body.style.backgroundImage = "url('images/background2.png')";
         }
         
@@ -348,60 +347,40 @@ document.addEventListener("DOMContentLoaded", function () {
             playSound('sounds/crunch.wav');
             if (crunchStage === crunchImages.length) {
                 jar.removeEventListener('click', crunchJar);
-                enableScreenEating(); // Enable screen eating only after the jar is fully eaten
+                setTimeout(enableScreenEating, 100);
                 document.body.style.cursor = 'pointer'; 
             }
         }
     }
+    
     
     function enableScreenEating() {
         document.addEventListener('click', eatScreen);
     }
     
     function eatScreen(event) {
-        if (crunchStage === 22) { // Only allow eating the screen if crunchStage is 22
-            const crunchShape = crunchShapes[0]; // Use the crunch-png image
-            const crunchDiv = document.createElement('div');
-            const size = 600;
-            crunchDiv.style.position = 'absolute';
-            crunchDiv.style.top = `${event.clientY - size / 2}px`;
-            crunchDiv.style.left = `${event.clientX - size / 2}px`;
-            crunchDiv.style.width = `${size}px`; 
-            crunchDiv.style.height = `${size}px`; 
-            crunchDiv.style.backgroundImage = `url(${crunchShape})`;
-            crunchDiv.style.backgroundSize = 'cover';
-            crunchDiv.style.transform = `rotate(${Math.random() * 360}deg)`; // Apply random rotation
-            document.body.appendChild(crunchDiv);
-            playSound('sounds/crunch.wav');
-            checkIfScreenIsCovered();
-        }
-    }
+        const crunchShape = crunchShapes[0]; 
+        const crunchDiv = document.createElement('div');
+        const size = 600;
+        crunchDiv.style.position = 'absolute';
+        crunchDiv.style.top = `${event.clientY - size / 2}px`;
+        crunchDiv.style.left = `${event.clientX - size / 2}px`;
+        crunchDiv.style.width = `${size}px`; 
+        crunchDiv.style.height = `${size}px`; 
+        crunchDiv.style.backgroundImage = `url(${crunchShape})`;
+        crunchDiv.style.backgroundSize = 'cover';
+        crunchDiv.style.transform = `rotate(${Math.random() * 360}deg)`; 
+        document.body.appendChild(crunchDiv);
+        playSound('sounds/crunch.wav');
     
-    function checkIfScreenIsCovered() {
-        const bodyRect = document.body.getBoundingClientRect();
-        const crunchDivs = document.querySelectorAll('div[style*="background-image"]');
-        let coveredArea = 0;
-    
-        crunchDivs.forEach(crunchDiv => {
-            const rect = crunchDiv.getBoundingClientRect();
-            if (rect.width > 0 && rect.height > 0) { // Ensure the element is visible
-                const x_overlap = Math.max(0, Math.min(rect.right, bodyRect.right) - Math.max(rect.left, bodyRect.left));
-                const y_overlap = Math.max(0, Math.min(rect.bottom, bodyRect.bottom) - Math.max(rect.top, bodyRect.top));
-                const overlapArea = x_overlap * y_overlap;
-                coveredArea += overlapArea;
-            }
-        });
-    
-        const totalArea = bodyRect.width * bodyRect.height;
-        // This doesn't work the way I wanted it to but I am at peace with that 
-        if (coveredArea >= totalArea * 0.9 && !endTimeRecorded) { // Check for 90% coverage 
+        if (!endTimeRecorded) { e
             endTimeRecorded = true;
-            endTime = new Date(); // End the timer
+            endTime = new Date(); 
             let timeTaken = new Date(endTime - startTime);
             let minutes = timeTaken.getUTCMinutes();
             let seconds = timeTaken.getUTCSeconds();
             let milliseconds = timeTaken.getUTCMilliseconds();
-            tutorialText.textContent = `You made egg jam in ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${milliseconds.toString().padStart(3, '0')}`; // Display the completion time
+            tutorialText.textContent = `You made egg jam in ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${milliseconds.toString().padStart(3, '0')}`;
         }
     }
     
