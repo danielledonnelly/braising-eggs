@@ -5,6 +5,7 @@ let endTimeRecorded = false;
 // The code pertaining to time was added because as I was play-testing, I found it really fun to go as fast as possible. This inspired me to add a speedrun timer.
 document.addEventListener("DOMContentLoaded", function () {
     startTime = new Date();
+    document.body.classList.add('fade-background');
     const egg = document.getElementById("egg");
     const trashCan = document.getElementById("trash-can");
     const tutorialText = document.getElementById("tutorial-text");
