@@ -96,7 +96,6 @@ document.addEventListener("DOMContentLoaded", function () {
     firePot.addEventListener("drop", extinguishFire);
 
     // Mobile drag-and-drop events (not currently functional)
-    egg.addEventListener("touchstart", dragStart);
     trashCan.addEventListener("touchmove", dragOver);
     trashCan.addEventListener("touchend", dropInTrash);
     trashCan.addEventListener("touchend", showPot); 
@@ -131,6 +130,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 egg.draggable = false;
             } else if (crackStage === crackImages.length - 1) {
                 tutorialText.textContent = "Throw your broken egg in the trash.";
+                egg.addEventListener("touchstart", dragStart);
                 egg.draggable = true;
                 trashCan.classList.remove("hidden");
             }
