@@ -7,11 +7,11 @@ body {
   margin: 0;
   font-family: Arial, sans-serif;
   background-color: #000; 
-  transition: background-image 1s ease-in-out;
+  transition: background-image 0.5s ease-in-out;
 }
 
 .fade-background {
-  transition: background-image 1s ease-in-out;
+  transition: background-image 0.5 ease-in-out;
 }
 
 #game {
