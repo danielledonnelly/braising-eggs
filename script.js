@@ -1,8 +1,8 @@
-// Welcome to Braising Eggs, a 2D drag and drop game where you make egg jam (or as it's more commonly known, mayonnaise).
+// Welcome to Braising Eggs, a 2D drag and drop game where you make egg jam (mayonnaise).
 // This is my first game jam project. It was make for eggjam, a game jam with a theme of "raising eggs."
 let startTime;
 let endTimeRecorded = false; 
-// The code pertaining to time was added because as I was play-testing, I found it really fun to go as fast as possible. This inspired me to add a speedrun timer.
+// Rushing through the game to playtest it as fast as I could made me realize that it would be fun to add a speedrun timer. So I did!
 document.addEventListener("DOMContentLoaded", function () {
     startTime = new Date();
     document.body.classList.add('fade-background');
