@@ -1,4 +1,4 @@
-# ⬯ [Braising Eggs](https://danielledonnelly.github.io/braising-eggs/) ⬯
+# [Braising Eggs](https://danielledonnelly.github.io/braising-eggs/)
 ## Braise eggs and turn them into egg jam (mayonnaise) in this 2D Cookingmamalike
   ✦ My first gamejam project; initially made for Eggjam in about a week
   <br>✦ Created with HTML, CSS, JS, and some Canva magic
