@@ -1,5 +1,5 @@
-This is my submission for Eggjam, a game jam with the theme of "Raising Eggs."
-
-This game is a goofy 2D cookingmamalike that involves braising eggs to make egg jam (or as it's more commonly known, mayonnaise). 
-
-Play it [here](https://danielledonnelly.github.io/braising-eggs/).
+# ⬯ [Braising Eggs](https://danielledonnelly.github.io/braising-eggs/) ⬯
+## A goofy 2D cookingmamalike where your objective is to braise eggs and turn them into egg jam (mayonnaise)
+  ✦ My first gamejam project (the first draft was completed within a week)
+  <br>✦ Created with HTML, CSS, JS, and some Canva magic
+  <br>✦ Features a speedrun timer (the current known record is 00.11.762 seconds)
